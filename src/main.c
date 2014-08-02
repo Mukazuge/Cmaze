@@ -248,7 +248,6 @@ int main( int argc, char* args[] )
                        if(player.hp > 0) {
                         player.hp--;
                         lastEnemy = enemies[i];
-                        printf("p:%d,%d   e%d:%d,%d\n",player.x,player.y,i,enemies[i].x,enemies[i].y);
                        }
                     } 
                 }
