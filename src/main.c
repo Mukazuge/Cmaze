@@ -1,5 +1,7 @@
 #define SDL_MAIN_HANDLED
+#include <stdbool.h>
 #include <time.h>
+
 #ifdef __MINGW32__
   #include "windows.h"
 #else
@@ -9,8 +11,9 @@
 #include "animation.h"
 #include "items.h"
 #include "maze.h"
+
 Map maze;
-int level = 0;
+int level = 0; 
 bool nextlevel = false;
 bool alive = true, start = true, finished = false;
 int RIGHT = 0, BOT = 0, MAXMOBS = 0;

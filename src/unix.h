@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "ttf.h"
 
 #define SDL_MAIN_HANDLED
 
 SDL_Window * window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Event event;
-stbtt_fontinfo font;
 
 Uint32 old_time, current_time;
 float ftime;
@@ -50,4 +48,9 @@ void render() {
     old_time = current_time;
     current_time = SDL_GetTicks();
     ftime = (current_time - old_time) / 1000.0f;
+}
+
+
+void resizeWindow(int newWidth, int newHeight){
+    SDL_SetWindowSize(window, newWidth, newHeight);
 }
