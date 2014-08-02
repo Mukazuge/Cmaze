@@ -299,6 +299,17 @@ int main( int argc, char* args[] )
         if( event.type == SDL_QUIT){
             finished = true;
         }
+        if((event.type == SDL_KEYDOWN) && !alive){
+            if( event.key.keysym.sym == SDLK_SPACE){
+                  level = 0; 
+                RIGHT = 0, BOT = 0, MAXMOBS = 0;
+                MAXHP = 3;
+                nextlevel = true;
+                alive = true;
+
+            }
+        }
+
         }while((!finished) && nextlevel == false);
     }while(alive && (!finished));
 
