@@ -1,2 +1,2 @@
 que los mobs que muevan solos 
-hacer que cuando pierda tambien reinicie el juego pulsando Space bar
+
