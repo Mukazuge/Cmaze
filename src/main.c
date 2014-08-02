@@ -21,6 +21,7 @@ int MAXHP = 3;
 long MOBSPEED = 200;
 long TICK = 0, LASTTICK = 0, TICKCOUNT = 0;
 long FRAMERATE = 200, FRAMECOUNT = 0, LASTFRAME = 0;
+Enemy lastEnemy;
 
 bool cellEmpty(Enemy enemies[], int newX, int  newY){
     bool empty = true;
@@ -58,7 +59,8 @@ int main( int argc, char* args[] )
         level++;
         RIGHT = 11 + (level * 4);
         BOT = 11 + (level * 2);
-        MAXMOBS = 1 + (level * 3);  
+        MAXMOBS = 1 + (level * 3); 
+        MOBSPEED = 300-(level *30); 
         resizeWindow(RIGHT*32, BOT*32);
         int direction = 0;
         int playerHpextra = rand()%3;
@@ -237,9 +239,11 @@ int main( int argc, char* args[] )
             //player and mob colition validation
             if(TURN) {
                 for(i = 0;i<MAXMOBS;i++){
-                    if((enemies[i].x == player.x ) && (enemies[i].y == player.y)){
+                    if((enemies[i].x == player.x ) && (enemies[i].y == player.y) && (lastEnemy.x !=enemies[i].x && lastEnemy.y !=enemies[i].y)) {
                        if(player.hp > 0) {
                         player.hp--;
+                        lastEnemy = enemies[i];
+                        printf("p:%d,%d   e%d:%d,%d\n",player.x,player.y,i,enemies[i].x,enemies[i].y);
                        }
                     } 
                 }
