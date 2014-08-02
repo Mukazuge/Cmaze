@@ -61,7 +61,12 @@ int main( int argc, char* args[] )
         BOT = 11 + (level * 2);
         MAXMOBS = 1 + (level * 3); 
         MOBSPEED = 300-(level *30); 
+        if (RIGHT*32 >= 800){
+            RIGHT = 25;
+            BOT = 19;
+        }
         resizeWindow(RIGHT*32, BOT*32);
+
         int direction = 0;
         int playerHpextra = rand()%3;
         int i,j;
@@ -232,7 +237,7 @@ int main( int argc, char* args[] )
                     }
                 }
                 //end gate colition validation
-                if((endGate.x == player.x) && (endGate.y == player.y) && takenCheckpoints == 4) {
+                if((endGate.x == player.x) && (endGate.y == player.y) ) {//&& takenCheckpoints == 4
                     nextlevel = true;
                 }
             }
@@ -241,7 +246,7 @@ int main( int argc, char* args[] )
                 for(i = 0;i<MAXMOBS;i++){
                     if((enemies[i].x == player.x ) && (enemies[i].y == player.y) && (lastEnemy.x !=enemies[i].x && lastEnemy.y !=enemies[i].y)) {
                        if(player.hp > 0) {
-                        player.hp--;
+                        //player.hp--;
                         lastEnemy = enemies[i];
                         printf("p:%d,%d   e%d:%d,%d\n",player.x,player.y,i,enemies[i].x,enemies[i].y);
                        }
