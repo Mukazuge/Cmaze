@@ -9,7 +9,7 @@ SDL_Event event;
 
 void init() {
     SDL_Init(SDL_INIT_VIDEO);
-    window = SDL_CreateWindow("Pulsa X para comenzar de nuevo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1248, 928, 0);
+    window = SDL_CreateWindow("Pulsa Space para comenzar de nuevo desde cero", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1248, 928, 0);
     
     HWND windowHandle = GetConsoleWindow();
 	ShowWindow(windowHandle,SW_HIDE);
