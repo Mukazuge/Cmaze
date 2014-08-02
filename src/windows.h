@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <SDL2/SDL.h>
 
-typedef enum { false, true } bool;
 
 SDL_Window * window = NULL;
 SDL_Renderer *renderer = NULL;
