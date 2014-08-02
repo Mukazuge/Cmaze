@@ -237,7 +237,7 @@ int main( int argc, char* args[] )
                     }
                 }
                 //end gate colition validation
-                if((endGate.x == player.x) && (endGate.y == player.y) ) {//&& takenCheckpoints == 4
+                if((endGate.x == player.x) && (endGate.y == player.y) && takenCheckpoints == 4) {
                     nextlevel = true;
                 }
             }
@@ -246,7 +246,7 @@ int main( int argc, char* args[] )
                 for(i = 0;i<MAXMOBS;i++){
                     if((enemies[i].x == player.x ) && (enemies[i].y == player.y) && (lastEnemy.x !=enemies[i].x && lastEnemy.y !=enemies[i].y)) {
                        if(player.hp > 0) {
-                        //player.hp--;
+                        player.hp--;
                         lastEnemy = enemies[i];
                         printf("p:%d,%d   e%d:%d,%d\n",player.x,player.y,i,enemies[i].x,enemies[i].y);
                        }
