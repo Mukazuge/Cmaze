@@ -127,43 +127,43 @@ int main( int argc, char* args[] )
 
         do {
             SDL_WaitEvent(&event);
-           //enemy movement
+            //enemy movement
+            for(i = 0;i<MAXMOBS;i++){
+                if(enemies[i].steps < 1){
+                    enemies[i].direction = rand()%4;
+                    enemies[i].steps = 2+(rand()%10);
+                }
+                enemies[i].steps--;
+                
+                switch(enemies[i].direction){
+                    case 0:
+                        if(enemies[i].y < BOT-1 && (cellEmpty(enemies,enemies[i].x,enemies[i].y+1))){
+                            if (isWalkable(maze, enemies[i].x, enemies[i].y+1)) enemies[i].y++;    
+                        }
+                        else enemies[i].steps = 0;
+                        break;
+                    case 1:
+                        if(enemies[i].x < RIGHT-1&& (cellEmpty(enemies,enemies[i].x+1,enemies[i].y))){
+                            if (isWalkable(maze, enemies[i].x+1, enemies[i].y)) enemies[i].x++;
+                        }
+                        else enemies[i].steps = 0;
+                        break;
+                    case 2:
+                        if(enemies[i].y > TOP&& (cellEmpty(enemies,enemies[i].x,enemies[i].y-1))){
+                            if (isWalkable(maze, enemies[i].x, enemies[i].y-1)) enemies[i].y--;
+                        }
+                        else enemies[i].steps = 0;
+                        break;
+                    case 3:
+                        if(enemies[i].x > LEFT&& (cellEmpty(enemies,enemies[i].x-1,enemies[i].y))){
+                            if (isWalkable(maze, enemies[i].x-1, enemies[i].y)) enemies[i].x--;
+                        }
+                        else enemies[i].steps = 0;
+                        break;
+                }
+            }
             if((event.type == SDL_KEYDOWN || start) && alive) {
                 start = false;
-                for(i = 0;i<MAXMOBS;i++){
-                    if(enemies[i].steps < 1){
-                        enemies[i].direction = rand()%4;
-                        enemies[i].steps = 2+(rand()%10);
-                    }
-                    enemies[i].steps--;
-                    
-                    switch(enemies[i].direction){
-                        case 0:
-                            if(enemies[i].y < BOT-1 && (cellEmpty(enemies,enemies[i].x,enemies[i].y+1))){
-                                if (isWalkable(maze, enemies[i].x, enemies[i].y+1)) enemies[i].y++;    
-                            }
-                            else enemies[i].steps = 0;
-                            break;
-                        case 1:
-                            if(enemies[i].x < RIGHT-1&& (cellEmpty(enemies,enemies[i].x+1,enemies[i].y))){
-                                if (isWalkable(maze, enemies[i].x+1, enemies[i].y)) enemies[i].x++;
-                            }
-                            else enemies[i].steps = 0;
-                            break;
-                        case 2:
-                            if(enemies[i].y > TOP&& (cellEmpty(enemies,enemies[i].x,enemies[i].y-1))){
-                                if (isWalkable(maze, enemies[i].x, enemies[i].y-1)) enemies[i].y--;
-                            }
-                            else enemies[i].steps = 0;
-                            break;
-                        case 3:
-                            if(enemies[i].x > LEFT&& (cellEmpty(enemies,enemies[i].x-1,enemies[i].y))){
-                                if (isWalkable(maze, enemies[i].x-1, enemies[i].y)) enemies[i].x--;
-                            }
-                            else enemies[i].steps = 0;
-                            break;
-                    }
-                }
                 //player movement
                 switch( event.key.keysym.sym ) {
                     case SDLK_DOWN:
@@ -190,6 +190,7 @@ int main( int argc, char* args[] )
                         nextlevel = true;
                         break;
                 } 
+            }
                 //player border validation
                 if (player.x > RIGHT-1) player.x = RIGHT-1;
                 if (player.x <1) player.x = 0;
@@ -295,20 +296,18 @@ int main( int argc, char* args[] )
                     }
                 }
                 render();
+            if( event.type == SDL_QUIT){
+                finished = true;
             }
-        if( event.type == SDL_QUIT){
-            finished = true;
-        }
-        if((event.type == SDL_KEYDOWN) && !alive){
-            if( event.key.keysym.sym == SDLK_SPACE){
-                  level = 0; 
-                RIGHT = 0, BOT = 0, MAXMOBS = 0;
-                MAXHP = 3;
-                nextlevel = true;
-                alive = true;
-
+            if((event.type == SDL_KEYDOWN) && !alive){
+                if( event.key.keysym.sym == SDLK_SPACE){
+                      level = 0; 
+                    RIGHT = 0, BOT = 0, MAXMOBS = 0;
+                    MAXHP = 3;
+                    nextlevel = true;
+                    alive = true;
+                }
             }
-        }
 
         }while((!finished) && nextlevel == false);
     }while(alive && (!finished));
