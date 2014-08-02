@@ -56,15 +56,23 @@ int main( int argc, char* args[] )
         level++;
         RIGHT = 11 + (level * 4);
         BOT = 11 + (level * 2);
-        MAXMOBS = 1 + (level * 2);  
+        MAXMOBS = 1 + (level * 3);  
         resizeWindow(RIGHT*32, BOT*32);
         int direction = 0;
+        int playerHpextra = rand()%3;
         int i,j;
         int takenCheckpoints = 0;
         start = true;
         alive = true;
         Player player;
-        player.hp = MAXHP++;
+        switch(playerHpextra){
+            case 2:
+                  player.hp = MAXHP++;
+                  break;
+            default:
+            player.hp = MAXHP; 
+        }
+
         player.frame = 0;
         Enemy enemies[MAXMOBS];
         Item items[MAXITEMS];
@@ -191,111 +199,111 @@ int main( int argc, char* args[] )
                         break;
                 } 
             }
-                //player border validation
-                if (player.x > RIGHT-1) player.x = RIGHT-1;
-                if (player.x <1) player.x = 0;
-                if (player.y > BOT-1) player.y = BOT-1;
-                if (player.y <1) player.y = 0;
-                //checkpoint colition validation
-                for(i = 0;i<MAXCHECKPOINTS;i++){
-                    if((checkpoints[i].x == player.x) && (checkpoints[i].y == player.y) && (checkpoints[i].visible)){
-                    checkpoints[i].visible = false;
-                    takenCheckpoints++;
+            //player border validation
+            if (player.x > RIGHT-1) player.x = RIGHT-1;
+            if (player.x <1) player.x = 0;
+            if (player.y > BOT-1) player.y = BOT-1;
+            if (player.y <1) player.y = 0;
+            //checkpoint colition validation
+            for(i = 0;i<MAXCHECKPOINTS;i++){
+                if((checkpoints[i].x == player.x) && (checkpoints[i].y == player.y) && (checkpoints[i].visible)){
+                checkpoints[i].visible = false;
+                takenCheckpoints++;
+                }
+            }
+            //end gate colition validation
+            if((endGate.x == player.x) && (endGate.y == player.y) ) {//&& takenCheckpoints == 4
+                nextlevel = true;
+            }
+            //item spawn  validation
+            for(i = 0;i<MAXITEMS;i++){
+                if((items[i].x == player.x) && (items[i].y == player.y) &&(items[i].visible)) items[i].visible = false;   
+            }
+            //player and mob colition validation
+            for(i = 0;i<MAXMOBS;i++){
+                if((enemies[i].x == player.x ) && (enemies[i].y == player.y)){
+                  // player.hp--;
+                } 
+            }    
+            clear();
+            //map render
+            for(i = 0;i < maze.width; i++){
+                for(j = 0; j < maze.height; j++){
+                    SDL_Rect tilePaste = { i*32, j*32, 32, 32 };
+                    switch (getCell(maze, i, j)){
+                        case FLOOR://floor
+                        case ITEM://item or enemy
+                        case SHIELD://chechpoint
+                        case WHIP://chechpoint
+                        case ARMOR://chechpoint
+                        case TEDDY://chechpoint
+                        case START://Start
+                        case GOAL://End
+                            SDL_RenderCopy(renderer, tileSet, &tileGrass, &tilePaste);
+                            break;
+                        case WALL_HORZ:
+                        case WALL_VERT:
+                        case WALL_CROS:
+                            SDL_RenderCopy(renderer, tileSet, &tileWall, &tilePaste);
+                            break;    
                     }
                 }
-                //end gate colition validation
-                if((endGate.x == player.x) && (endGate.y == player.y) && takenCheckpoints == 4) {
-                    nextlevel = true;
-                }
-                //item spawn  validation
-                for(i = 0;i<MAXITEMS;i++){
-                    if((items[i].x == player.x) && (items[i].y == player.y) &&(items[i].visible)) items[i].visible = false;   
-                }
-                //player and mob colition validation
-                for(i = 0;i<MAXMOBS;i++){
-                    if((enemies[i].x == player.x ) && (enemies[i].y == player.y)){
-                       player.hp--;
-                    } 
-                }    
-                clear();
-                //map render
-                for(i = 0;i < maze.width; i++){
-                    for(j = 0; j < maze.height; j++){
-                        SDL_Rect tilePaste = { i*32, j*32, 32, 32 };
-                        switch (getCell(maze, i, j)){
-                            case FLOOR://floor
-                            case ITEM://item or enemy
-                            case SHIELD://chechpoint
-                            case WHIP://chechpoint
-                            case ARMOR://chechpoint
-                            case TEDDY://chechpoint
-                            case START://Start
-                            case GOAL://End
-                                SDL_RenderCopy(renderer, tileSet, &tileGrass, &tilePaste);
-                                break;
-                            case WALL_HORZ:
-                            case WALL_VERT:
-                            case WALL_CROS:
-                                SDL_RenderCopy(renderer, tileSet, &tileWall, &tilePaste);
-                                break;    
-                        }
-                    }
-                }  
-                //checkpoints render
-                for(i = 0;i<MAXCHECKPOINTS;i++){ 
-                    if(checkpoints[i].visible){    
-                        SDL_Rect checkpointPaste = { (checkpoints[i].x*32), (checkpoints[i].y*32), 32, 32};
-                        
-                        switch (getCell(maze, checkpoints[i].x, checkpoints[i].y)){
-                            case ARMOR:
-                                SDL_RenderCopy(renderer, tileSet, &tileArmor, &checkpointPaste);
-                                break;
-                            case TEDDY:
-                                SDL_RenderCopy(renderer, tileSet, &tileTeddy, &checkpointPaste);
-                                break;
-                            case SHIELD:
-                                SDL_RenderCopy(renderer, tileSet, &tileShield, &checkpointPaste);
-                                break;
-                            case WHIP:
-                                SDL_RenderCopy(renderer, tileSet, &tileWhip, &checkpointPaste);
-                                break;
-                        }
-                    }
-                }       
-                //gates render
-                    SDL_Rect endgatePaste = { (endGate.x*32), (endGate.y*32), 32, 32};
-                    SDL_RenderCopy(renderer, tileSet, &tileEnd, &endgatePaste);
-                            
-                //mobs render
-                for(i = 0;i<MAXMOBS;i++){
-                        enemies[i].frame++;
-                        if(enemies[i].frame>2) enemies[i].frame = 0;
-                        SDL_Rect areaEnemy = {(96* enemies[i].direction)+ (32*enemies[i].frame), 224, 32, 32}; 
-                        SDL_Rect enemyPaste = { (enemies[i].x*32), (enemies[i].y*32), 32, 32};
-                        SDL_RenderCopy(renderer, heroSprite, &areaEnemy, &enemyPaste);
+            }  
+            //checkpoints render
+            for(i = 0;i<MAXCHECKPOINTS;i++){ 
+                if(checkpoints[i].visible){    
+                    SDL_Rect checkpointPaste = { (checkpoints[i].x*32), (checkpoints[i].y*32), 32, 32};
                     
-                }
-                //player render
-                player.frame++;
-                if (player.frame >2) player.frame = 0;
-
-                SDL_Rect playerCut = { (96* direction)+ (32*player.frame), 32, 32, 32};
-                SDL_Rect playerPaste = { player.x*32, player.y*32, 32, 32 };
-                SDL_RenderCopy(renderer, heroSprite, &playerCut, &playerPaste);
-                //defeat render
-                if(player.hp<=0){
-                    SDL_Rect defeatPaste = {0, 0, RIGHT*32, BOT*32};
-                    SDL_RenderCopy(renderer, defeatSprite, &defeatArea, &defeatPaste);
-                    alive = false;
-                }
-                //heart render
-                for(i = 0;i<player.hp;i++){ 
-                    if(hearts[i].visible){    
-                        SDL_Rect heartPaste = {i*32, 0, 32, 32};
-                        SDL_RenderCopy(renderer, healthSprite, &heartArea, &heartPaste);
+                    switch (getCell(maze, checkpoints[i].x, checkpoints[i].y)){
+                        case ARMOR:
+                            SDL_RenderCopy(renderer, tileSet, &tileArmor, &checkpointPaste);
+                            break;
+                        case TEDDY:
+                            SDL_RenderCopy(renderer, tileSet, &tileTeddy, &checkpointPaste);
+                            break;
+                        case SHIELD:
+                            SDL_RenderCopy(renderer, tileSet, &tileShield, &checkpointPaste);
+                            break;
+                        case WHIP:
+                            SDL_RenderCopy(renderer, tileSet, &tileWhip, &checkpointPaste);
+                            break;
                     }
                 }
-                render();
+            }       
+            //gates render
+                SDL_Rect endgatePaste = { (endGate.x*32), (endGate.y*32), 32, 32};
+                SDL_RenderCopy(renderer, tileSet, &tileEnd, &endgatePaste);
+                        
+            //mobs render
+            for(i = 0;i<MAXMOBS;i++){
+                    enemies[i].frame++;
+                    if(enemies[i].frame>2) enemies[i].frame = 0;
+                    SDL_Rect areaEnemy = {(96* enemies[i].direction)+ (32*enemies[i].frame), 224, 32, 32}; 
+                    SDL_Rect enemyPaste = { (enemies[i].x*32), (enemies[i].y*32), 32, 32};
+                    SDL_RenderCopy(renderer, heroSprite, &areaEnemy, &enemyPaste);
+                
+            }
+            //player render
+            player.frame++;
+            if (player.frame >2) player.frame = 0;
+
+            SDL_Rect playerCut = { (96* direction)+ (32*player.frame), 32, 32, 32};
+            SDL_Rect playerPaste = { player.x*32, player.y*32, 32, 32 };
+            SDL_RenderCopy(renderer, heroSprite, &playerCut, &playerPaste);
+            //defeat render
+            if(player.hp<=0){
+                SDL_Rect defeatPaste = {0, 0, RIGHT*32, BOT*32};
+                SDL_RenderCopy(renderer, defeatSprite, &defeatArea, &defeatPaste);
+                alive = false;
+            }
+            //heart render
+            for(i = 0;i<player.hp;i++){ 
+                if(hearts[i].visible){    
+                    SDL_Rect heartPaste = {i*32, 0, 32, 32};
+                    SDL_RenderCopy(renderer, healthSprite, &heartArea, &heartPaste);
+                }
+            }
+            render();
             if( event.type == SDL_QUIT){
                 finished = true;
             }
