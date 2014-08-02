@@ -1,11 +1,2 @@
-10000 - Initial commit
-10001 - Create Makefile and structure
-10010 - create main loop
-10020 - create graphics screen
-10030 - put some player in the screen
-10040 - move the player around the screen using keyboard
-10050 - add stats to the screen
-10060 - add some enemies
-10070 - add some items
-10080 - consume items
-10090 - battle system
+que los mobs que muevan solos 
+hacer que al precionar X reinicie el juego
