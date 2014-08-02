@@ -50,6 +50,7 @@ int main( int argc, char* args[] )
     SDL_Rect tileEnd = {10, 1590, 48, 48};
     SDL_Rect defeatArea = {0, 0, 800, 600};
     SDL_Rect heartArea = {0, 4, 20, 20};
+
     do{
         nextlevel = false;
         level++;
@@ -67,7 +68,7 @@ int main( int argc, char* args[] )
         player.frame = 0;
         Enemy enemies[MAXMOBS];
         Item items[MAXITEMS];
-        Item gates[2];
+        Item endGate;
         Item checkpoints[MAXCHECKPOINTS];
         Item hearts[MAXHP];
 
@@ -118,25 +119,12 @@ int main( int argc, char* args[] )
             }
         }
         //gates spawn
-         for(i = 0;i<2;i++){ 
             do{ 
-                gates[i].x = rand()%(RIGHT);
-                gates[i].y = rand()%(BOT);
-                 if(i==0){
-                    gates[i].x = player.x;
-                    gates[i].y = player.y;
-                }
-            }while(getCell(maze, gates[i].x, gates[i].y) != FLOOR);
+                endGate.x = rand()%(RIGHT);
+                endGate.y = rand()%(BOT);
+            }while(getCell(maze, endGate.x, endGate.y) != FLOOR);
+            setCell(&maze, endGate.x, endGate.y, GOAL);
 
-            switch(i){
-                case 0:
-                    setCell(&maze, gates[i].x, gates[i].y, START); 
-                    break;
-                case 1:
-                    setCell(&maze, gates[i].x, gates[i].y, GOAL); 
-                    break;
-            }        
-        }
         do {
             SDL_WaitEvent(&event);
            //enemy movement
@@ -194,6 +182,13 @@ int main( int argc, char* args[] )
                         direction = 2;
                         if (isWalkable(maze, player.x, player.y-1)) animateTo(&player,0,-1,0);
                         break;
+                        //RESTART
+                    case SDLK_SPACE:
+                        level = 0; 
+                        RIGHT = 0, BOT = 0, MAXMOBS = 0;
+                        MAXHP = 3;
+                        nextlevel = true;
+                        break;
                 } 
                 //player border validation
                 if (player.x > RIGHT-1) player.x = RIGHT-1;
@@ -208,9 +203,8 @@ int main( int argc, char* args[] )
                     }
                 }
                 //end gate colition validation
-                if((gates[1].x == player.x) && (gates[1].y == player.y)&& takenCheckpoints == 4) {
+                if((endGate.x == player.x) && (endGate.y == player.y) && takenCheckpoints == 4) {
                     nextlevel = true;
-                    
                 }
                 //item spawn  validation
                 for(i = 0;i<MAXITEMS;i++){
@@ -268,18 +262,9 @@ int main( int argc, char* args[] )
                     }
                 }       
                 //gates render
-                for (i = 0;i < 2;i++){
-                    SDL_Rect gatesPaste = { (gates[i].x*32), (gates[i].y*32), 32, 32};
-                    switch (getCell(maze, gates[i].x, gates[i].y)){
-                        case START:
-                            SDL_RenderCopy(renderer, tileSet, &tileStart, &gatesPaste);
-                            break;
-                        case GOAL:
-                            SDL_RenderCopy(renderer, tileSet, &tileEnd, &gatesPaste);
-                            break;
-                    }
-                }
-              
+                    SDL_Rect endgatePaste = { (endGate.x*32), (endGate.y*32), 32, 32};
+                    SDL_RenderCopy(renderer, tileSet, &tileEnd, &endgatePaste);
+                            
                 //mobs render
                 for(i = 0;i<MAXMOBS;i++){
                         enemies[i].frame++;
