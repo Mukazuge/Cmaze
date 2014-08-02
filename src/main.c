@@ -59,11 +59,11 @@ int main( int argc, char* args[] )
         level++;
         RIGHT = 11 + (level * 4);
         BOT = 11 + (level * 2);
-        MAXMOBS = 1 + (level * 3); 
+        MAXMOBS = 1 + (level * 2); 
         MOBSPEED = 300-(level *30); 
-        if (RIGHT*32 >= 800){
-            RIGHT = 25;
-            BOT = 19;
+        if (RIGHT*32 >= 1200){
+            RIGHT = 37;
+            BOT = 25;
         }
         resizeWindow(RIGHT*32, BOT*32);
 
