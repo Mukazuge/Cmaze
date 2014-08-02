@@ -1,6 +1,10 @@
 #define SDL_MAIN_HANDLED
 #include <time.h>
-#include "graphics.h"
+#ifdef __MINGW32__
+  #include "windows.h"
+#else
+  #include "unix.h"
+#endif
 #include "enemies.h"
 #include "animation.h"
 #include "items.h"
