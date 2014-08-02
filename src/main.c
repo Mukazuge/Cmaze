@@ -208,7 +208,7 @@ int main( int argc, char* args[] )
                     }
                 }
                 //end gate colition validation
-                if((gates[1].x == player.x) && (gates[1].y == player.y)&& takenCheckpoints == 4) {// && takenCheckpoints == 4
+                if((gates[1].x == player.x) && (gates[1].y == player.y)&& takenCheckpoints == 4) {
                     nextlevel = true;
                     
                 }
